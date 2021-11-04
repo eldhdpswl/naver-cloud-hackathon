@@ -2,3 +2,11 @@ venv
 *.zip
 *.DS_Store
 testing.py
+config.json
+styles.css
+dks
+
+# Fullcalendar 
+# Get it from https://fullcalendar.io/docs/initialize-globals
+main.css
+main.js
