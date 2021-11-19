@@ -203,13 +203,16 @@ Daily + Emotion 이라는 의미로 하루하루 경제, 주식 키워드에 관
     negative = 0
 
     for item in sentiment_items:
-        sentiment = item['sentiment'][0]['sentiment']
-        if (sentiment == 'neutral'):
-            neutral += 1
-        elif (sentiment == 'positive'):
-            positive += 1
-        elif (sentiment == 'negative'):
-            negative += 1
+        try:
+            sentiment = item['sentiment'][0]['sentiment']
+            if (sentiment == 'neutral'):
+                neutral += 1
+            elif (sentiment == 'positive'):
+                positive += 1
+            elif (sentiment == 'negative'):
+                negative += 1
+        except IndexError: 
+            print('IndexError 에러 발생, exception처리완료')
 
     sentiment = [neutral, positive, negative]
     max_sentiment = max(sentiment)
@@ -230,13 +233,13 @@ Daily + Emotion 이라는 의미로 하루하루 경제, 주식 키워드에 관
         daily_sentiment = 'positive'
 
     sentiment = {
-        'date': datetime.now(),
+        'date': target_date['date_end'].strftime('%Y-%m-%d'),
         'neutral': neutral,
         'positive': positive,
         'negative': negative,
         'dailySentiment': daily_sentiment
     }
-
+    collection_new.delete_one({'date': target_date['date_end'].strftime('%Y-%m-%d')})
     collection_new.insert_one(sentiment)
 ```
 
