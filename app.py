@@ -60,10 +60,11 @@ def send_sentiments():
     sentiment_datas = []
     for data in datas:
         date = data['date']
-        if (date.day < 10):
-            date = f'{date.year}-{date.month}-0{date.day}'
-        else:
-            date = f'{date.year}-{date.month}-{date.day}'
+        # ##날짜포맷 수정부분##
+        # if (date.day < 10):
+        #     date = f'{date.year}-{date.month}-0{date.day}'
+        # else:
+        #     date = f'{date.year}-{date.month}-{date.day}'
         sentiment = data['dailySentiment']
         color = ''
         if sentiment == 'positive':
@@ -91,13 +92,17 @@ def send_sentiments_today():
     # ======before_date 일 전 데이터 조회하기=======
     target_date = cal_datetime_utc(0)
     # print(f'UTC targetdate: {target_date}')
-
+    
+    # ##날짜포맷 수정부분##
+    # datas = list(collection.find(
+    #     {'date': {'$gte': target_date['date_st'], '$lte': target_date['date_end']}}, {'_id': False}).sort('date', 1).limit(12))
     datas = list(collection.find(
-        {'date': {'$gte': target_date['date_st'], '$lte': target_date['date_end']}}, {'_id': False}).sort('date', 1).limit(12))
+        {'date': target_date['date_end'].strftime('%Y-%m-%d')}, {'_id': False}).sort('date', 1).limit(12))
     sentiment_datas = []
     for data in datas:
         date = data['date']
-        date = f'{date.year}-{date.month}-{date.day}'
+        # ##날짜포맷 수정부분##
+        # date = f'{date.year}-{date.month}-{date.day}'
         sentiment = data['dailySentiment']
 
         sentiment_data = {'today': sentiment, 'date': date}

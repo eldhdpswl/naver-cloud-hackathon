@@ -29,13 +29,18 @@ def main(args):
     negative = 0
 
     for item in sentiment_items:
-        sentiment = item['sentiment'][0]['sentiment']
-        if (sentiment == 'neutral'):
-            neutral += 1
-        elif (sentiment == 'positive'):
-            positive += 1
-        elif (sentiment == 'negative'):
-            negative += 1
+        # IndexError 예외처리
+        try:
+            sentiment = item['sentiment'][0]['sentiment']
+            if (sentiment == 'neutral'):
+                neutral += 1
+            elif (sentiment == 'positive'):
+                positive += 1
+            elif (sentiment == 'negative'):
+                negative += 1
+        except IndexError: 
+            print('IndexError 에러 발생, exception처리완료')    
+        
 
     sentiment = [neutral, positive, negative]
     max_sentiment = max(sentiment)
@@ -56,7 +61,9 @@ def main(args):
         daily_sentiment = 'positive'
 
     sentiment = {
-        'date': datetime.now(),
+        # ## sentiment 날짜포맷 변경
+        # 'date': datetime.now(),
+        'date': target_date['date_end'].strftime('%Y-%m-%d'),
         'neutral': neutral,
         'positive': positive,
         'negative': negative,
@@ -65,6 +72,8 @@ def main(args):
 
     # print(sentiment)
 
+    # ## sentiment 날짜포맷 변경 및 재수행시, 기존 sentiment 데이터 삭제후 재조회 입력
+    collection_new.delete_one({'date': target_date['date_end'].strftime('%Y-%m-%d')})
     collection_new.insert_one(sentiment)
 
     return {'process': 'end'}
